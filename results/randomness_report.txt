@@ -1,0 +1,17 @@
+
+==============================
+QuantumRandLab Randomness Report
+==============================
+
+Total bitstrings    : 1000
+Total bits          : 8000
+
+Zeros               : 3998
+Ones                : 4002
+
+P(0)                : 0.499750
+P(1)                : 0.500250
+
+Shannon Entropy     : 1.000000 bits
+
+Balance Test        : PASS

@@ -1,0 +1,74 @@
+A Modular Framework for Quantum Random Number Generation, Entropy Estimation, Randomness Certification, and Noise Analysis
+
+
+
+QuantumRandLab/
+│
+├── README.md
+├── LICENSE
+├── requirements.txt
+├── pyproject.toml
+├── .gitignore
+├── main.py
+│
+├── src/
+│   ├── __init__.py
+│   │
+│   ├── generators/
+│   │   ├── __init__.py
+│   │   ├── hadamard_qrng.py
+│   │   ├── bell_qrng.py
+│   │   └── biased_qrng.py
+│   │
+│   ├── circuits/
+│   │   ├── __init__.py
+│   │   ├── hadamard.py
+│   │   └── bell_state.py
+│   │
+│   ├── entropy/
+│   │   ├── __init__.py
+│   │   ├── shannon.py
+│   │   ├── min_entropy.py
+│   │   └── collision_entropy.py
+│   │
+│   ├── extractors/
+│   │   ├── __init__.py
+│   │   ├── von_neumann.py
+│   │   └── hash_extractor.py
+│   │
+│   ├── noise/
+│   │   ├── __init__.py
+│   │   ├── bit_flip.py
+│   │   ├── phase_flip.py
+│   │   ├── depolarizing.py
+│   │   └── amplitude_damping.py
+│   │
+│   ├── statistics/
+│   │   ├── __init__.py
+│   │   ├── frequency_test.py
+│   │   ├── chi_square.py
+│   │   ├── runs_test.py
+│   │   ├── autocorrelation.py
+│   │   └── poker_test.py
+│   │
+│   ├── visualization/
+│   │   ├── __init__.py
+│   │   ├── histogram.py
+│   │   ├── entropy_plot.py
+│   │   └── circuit_plot.py
+│   │
+│   └── backend/
+│       ├── __init__.py
+│       ├── simulator.py
+│       └── ibm_backend.py
+│
+├── dashboard/
+│   └── app.py
+│
+├── tests/
+│
+├── notebooks/
+│
+├── docs/
+│
+└── results/
