@@ -1,7 +1,13 @@
-import os
+"""
+main.py
 
+Entry point for QuantumRandLab.
+"""
+
+import os
 import matplotlib.pyplot as plt
 from qiskit.visualization import circuit_drawer
+from src.noise.noise_sweep import NoiseSweep
 
 from src.config import (
     NUM_QUBITS,
@@ -14,21 +20,20 @@ from src.config import (
 
 from src.generators.hadamard_qrng import HadamardQRNG
 from src.generators.bell_qrng import BellQRNG
+
 from src.statistics.randomness_report import RandomnessReport
+from src.statistics.bell_correlation_report import BellCorrelationReport
+
+from src.utils.report_writer import ReportWriter
 
 
 def save_circuit_image(circuit, filename: str):
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     fig = circuit_drawer(circuit, output="mpl")
-
     image_path = os.path.join(RESULTS_DIR, filename)
 
-    fig.savefig(
-        image_path,
-        dpi=300,
-        bbox_inches="tight",
-    )
+    fig.savefig(image_path, dpi=300, bbox_inches="tight")
 
     if SHOW_CIRCUIT:
         plt.show()
@@ -67,20 +72,25 @@ def run_hadamard_experiment():
     print("\n")
     print(report)
 
+    ReportWriter.save(
+        report,
+        "hadamard_randomness_report.txt"
+    )
+
 
 def run_bell_experiment():
     print("\n========================================")
     print("Bell-State QRNG Experiment")
     print("========================================")
 
-    bell_qrng = BellQRNG(shots=SHOTS)
+    bell = BellQRNG(shots=SHOTS)
 
-    circuit = bell_qrng.build_circuit()
+    circuit = bell.build_circuit()
 
     if SAVE_CIRCUIT:
         save_circuit_image(circuit, "bell_state_circuit.png")
 
-    bitstrings = bell_qrng.generate_bitstrings()
+    bitstrings = bell.generate_bitstrings()
     integers = BellQRNG.bitstrings_to_integers(bitstrings)
 
     print("\nBell bitstrings (first 20):")
@@ -89,15 +99,54 @@ def run_bell_experiment():
     print("\nBell integers (first 20):")
     print(integers[:20])
 
-    report = RandomnessReport.generate(bitstrings)
+    report = BellCorrelationReport.generate(bitstrings)
 
     print("\n")
     print(report)
 
+    ReportWriter.save(
+        report,
+        "bell_correlation_report.txt"
+    )
 
+def run_noise_sweep():
+    print("\n========================================")
+    print("Depolarizing Noise Sweep")
+    print("========================================")
+
+    noise_levels = [0.00, 0.02, 0.05, 0.10, 0.20]
+
+    hadamard_results = NoiseSweep.run_hadamard(
+        noise_levels=noise_levels,
+        num_qubits=NUM_QUBITS,
+        shots=SHOTS,
+    )
+
+    print("\nHadamard QRNG under depolarizing noise:")
+    for result in hadamard_results:
+        print(
+            f"Noise={result['noise']:.2f} | "
+            f"Shannon={result['shannon_entropy']:.6f} | "
+            f"Min={result['min_entropy']:.6f}"
+        )
+
+    bell_results = NoiseSweep.run_bell(
+        noise_levels=noise_levels,
+        shots=SHOTS,
+    )
+
+    print("\nBell QRNG under depolarizing noise:")
+    for result in bell_results:
+        print(
+            f"Noise={result['noise']:.2f} | "
+            f"Correlation={result['correlation_rate']:.6f} | "
+            f"00={result['00']} | 11={result['11']} | "
+            f"01={result['01']} | 10={result['10']}"
+        )
 def main():
     run_hadamard_experiment()
     run_bell_experiment()
+    run_noise_sweep()
 
 
 if __name__ == "__main__":

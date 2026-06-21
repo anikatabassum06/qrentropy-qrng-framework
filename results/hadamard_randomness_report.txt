@@ -1,0 +1,31 @@
+
+========================================
+QuantumRandLab Randomness Report
+========================================
+
+Total bitstrings        : 1000
+Total bits              : 8000
+
+Zeros                   : 4003
+Ones                    : 3997
+
+P(0)                    : 0.500375
+P(1)                    : 0.499625
+
+Shannon Entropy         : 1.000000 bits
+Min Entropy             : 0.998918 bits
+
+Frequency Test          : PASS
+Chi-Square Test         : PASS
+Chi-Square Statistic    : 0.004500
+
+Runs Test               : PASS
+Observed Runs           : 4068
+Expected Runs           : 4000.50
+
+Autocorrelation Test    : PASS
+Lag                     : 1
+Correlation             : 0.491561
+
+Overall Verdict         : PASS
+========================================
