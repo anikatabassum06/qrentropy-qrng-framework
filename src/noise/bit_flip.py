@@ -6,11 +6,14 @@ class BitFlipNoise:
     def create(probability: float) -> NoiseModel:
         noise_model = NoiseModel()
 
-        error = pauli_error([
+        single_qubit_error = pauli_error([
             ("X", probability),
             ("I", 1 - probability),
         ])
 
-        noise_model.add_all_qubit_quantum_error(error, ["h", "cx"])
+        two_qubit_error = single_qubit_error.tensor(single_qubit_error)
+
+        noise_model.add_all_qubit_quantum_error(single_qubit_error, ["h"])
+        noise_model.add_all_qubit_quantum_error(two_qubit_error, ["cx"])
 
         return noise_model

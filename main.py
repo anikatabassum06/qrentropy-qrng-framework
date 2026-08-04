@@ -7,7 +7,8 @@ Entry point for QuantumRandLab.
 import os
 import matplotlib.pyplot as plt
 from qiskit.visualization import circuit_drawer
-from src.noise.noise_sweep import NoiseSweep
+from src.noise.multi_noise_sweep import MultiNoiseSweep
+from src.visualization.multi_noise_plots import MultiNoisePlots
 
 from src.config import (
     NUM_QUBITS,
@@ -25,6 +26,8 @@ from src.statistics.randomness_report import RandomnessReport
 from src.statistics.bell_correlation_report import BellCorrelationReport
 
 from src.utils.report_writer import ReportWriter
+from src.noise.noise_sweep import NoiseSweep
+from src.visualization.noise_plots import NoisePlots
 
 
 def save_circuit_image(circuit, filename: str):
@@ -74,7 +77,7 @@ def run_hadamard_experiment():
 
     ReportWriter.save(
         report,
-        "hadamard_randomness_report.txt"
+        "hadamard_randomness_report.txt",
     )
 
 
@@ -106,8 +109,9 @@ def run_bell_experiment():
 
     ReportWriter.save(
         report,
-        "bell_correlation_report.txt"
+        "bell_correlation_report.txt",
     )
+
 
 def run_noise_sweep():
     print("\n========================================")
@@ -143,11 +147,52 @@ def run_noise_sweep():
             f"00={result['00']} | 11={result['11']} | "
             f"01={result['01']} | 10={result['10']}"
         )
+
+    NoisePlots.plot_hadamard_entropy(
+        hadamard_results,
+        "hadamard_entropy_vs_noise.png",
+    )
+
+    NoisePlots.plot_bell_correlation(
+        bell_results,
+        "bell_correlation_vs_noise.png",
+    )
+
+def run_multi_noise_comparison():
+    print("\n========================================")
+    print("Multi-Noise Comparison")
+    print("========================================")
+
+    noise_levels = [0.00, 0.02, 0.05, 0.10, 0.20]
+
+    hadamard_results = MultiNoiseSweep.run_hadamard(
+        noise_levels=noise_levels,
+        num_qubits=NUM_QUBITS,
+        shots=SHOTS,
+    )
+
+    bell_results = MultiNoiseSweep.run_bell(
+        noise_levels=noise_levels,
+        shots=SHOTS,
+    )
+
+    MultiNoisePlots.plot_hadamard_entropy(
+        hadamard_results,
+        "multi_noise_hadamard_entropy.png",
+    )
+
+    MultiNoisePlots.plot_bell_correlation(
+        bell_results,
+        "multi_noise_bell_correlation.png",
+    )
+
+    print("✅ Multi-noise comparison completed.")
+
 def main():
     run_hadamard_experiment()
     run_bell_experiment()
     run_noise_sweep()
-
+    run_multi_noise_comparison()
 
 if __name__ == "__main__":
     main()

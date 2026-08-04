@@ -5,8 +5,8 @@ Bell-State Correlation Report
 
 Total samples          : 1000
 
-00                     : 517
-11                     : 483
+00                     : 449
+11                     : 551
 01                     : 0
 10                     : 0
 
